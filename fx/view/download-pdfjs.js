@@ -5,6 +5,7 @@ const ProgressBar = require('progress')
 const { JSDOM } = require("jsdom")
 const httpsAgent = new Https.Agent({ rejectUnauthorized: false })
 const vgmUrl = 'https://mozilla.github.io/pdf.js/getting_started/#download'
+console.log('Checking file version...')
 Axios.get(vgmUrl, { httpsAgent }).then(response => {
   const dom = new JSDOM(response.data)
   const button = dom.window.document.querySelector('a[href*="-dist.zip"]')
@@ -16,7 +17,7 @@ Axios.get(vgmUrl, { httpsAgent }).then(response => {
     method: 'GET',
     responseType: 'stream'
   }).then((response) => {
-    const name = 'public/pdfjs.zip'
+    const name = 'public/libs/pdfjs.zip'
     console.log(`Starting download -> ${name}`)
     const file = Fs.createWriteStream(name)
     const progressBar = new ProgressBar('-> downloading [:bar] :percent :rate/bps :etas', {
