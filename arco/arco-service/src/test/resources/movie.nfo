@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--created on 2020-05-03 21:55:21 - tinyMediaManager 3.1.6-SNAPSHOT-->
+<movie>
+  <title>言叶之庭</title>
+  <originaltitle>言の葉の庭</originaltitle>
+  <sorttitle/>
+  <epbookmark/>
+  <year>2013</year>
+  <ratings>
+    <rating default="true" max="10" name="themoviedb">
+      <value>7.5</value>
+      <votes>1044</votes>
+    </rating>
+  </ratings>
+  <userrating>0.0</userrating>
+  <top250>0</top250>
+  <set/>
+  <plot>年方15岁的高中生秋月孝雄（入野自由 配音），专心学业的过程中不得不为了生计打工赚钱。母亲离家出走，他与哥哥过着看不到前方的生活。入梅之日，孝雄逃课来到日本庭园。在一座安静的小亭子里，27岁的职场女性雪野百香里（花泽香菜 配音）边吃巧克力边饮啤酒的样子引起了孝雄的注意。似曾相识的二人，仿佛约定好了一般，每到落雨之日便从世俗的烦恼中逃脱出来，相会于这座钢筋铁骨都市丛林中宛若世外桃源的幽静角落。在梅雨季节的日子里，他们的心渐渐向彼此靠拢。志愿成为手工鞋匠的秋月，决心以雪野为模特做一双鞋。  　　雨过天晴，艳阳高照，庭园中久久不见秋月和雪野的身影，相会无期亦有期……</plot>
+  <outline>年方15岁的高中生秋月孝雄（入野自由 配音），专心学业的过程中不得不为了生计打工赚钱。母亲离家出走，他与哥哥过着看不到前方的生活。入梅之日，孝雄逃课来到日本庭园。在一座安静的小亭子里，27岁的职场女性雪野百香里（花泽香菜 配音）边吃巧克力边饮啤酒的样子引起了孝雄的注意。似曾相识的二人，仿佛约定好了一般，每到落雨之日便从世俗的烦恼中逃脱出来，相会于这座钢筋铁骨都市丛林中宛若世外桃源的幽静角落。在梅雨季节的日子里，他们的心渐渐向彼此靠拢。志愿成为手工鞋匠的秋月，决心以雪野为模特做一双鞋。  　　雨过天晴，艳阳高照，庭园中久久不见秋月和雪野的身影，相会无期亦有期……</outline>
+  <tagline>言叶之庭</tagline>
+  <runtime>46</runtime>
+  <thumb aspect="poster">https://assets.fanart.tv/fanart/movies/198375/movieposter/the-garden-of-words-522974d48059d.jpg</thumb>
+  <fanart>
+    <thumb>http://image.tmdb.org/t/p/original/3TWuLaVp08w0VU5HIlWtzZh0G7N.jpg</thumb>
+  </fanart>
+  <mpaa>Rated PG-13</mpaa>
+  <certification>US:PG-13 / US:Rated PG-13</certification>
+  <id>tt2591814</id>
+  <tmdbid>198375</tmdbid>
+  <tmdbCollectionId/>
+  <uniqueid default="false" type="tmdb">198375</uniqueid>
+  <uniqueid default="true" type="imdb">tt2591814</uniqueid>
+  <country>日本</country>
+  <status/>
+  <code/>
+  <premiered>2013-05-31</premiered>
+  <watched>false</watched>
+  <playcount/>
+  <lastplayed/>
+  <genre>Animation</genre>
+  <genre>Drama</genre>
+  <genre>Romance</genre>
+  <studio>CoMix Wave Films</studio>
+  <credits>Makoto Shinkai</credits>
+  <director>Makoto Shinkai</director>
+  <tag>chocolate</tag>
+  <tag>age difference</tag>
+  <tag>rain</tag>
+  <tag>coming of age</tag>
+  <tag>tokyo, japan</tag>
+  <tag>seinen</tag>
+  <tag>shoemaker</tag>
+  <tag>anime</tag>
+  <actor>
+    <name>Miyu Irino</name>
+    <role>Takao Akizuki (voice)</role>
+    <thumb>http://image.tmdb.org/t/p/h632/dcZ4IJX8CBcJzxy8hhKFXv59LDE.jpg</thumb>
+    <profile>https://www.themoviedb.org/person/19588</profile>
+  </actor>
+  <actor>
+    <name>Kana Hanazawa</name>
+    <role>Yukari Yukino (voice)</role>
+    <thumb>http://image.tmdb.org/t/p/h632/5bK9ttcRydQBWmyZp7gXDmJYOPF.jpg</thumb>
+    <profile>https://www.themoviedb.org/person/119143</profile>
+  </actor>
+  <actor>
+    <name>Fumi Hirano</name>
+    <role>Takao's Mother (voice)</role>
+    <thumb/>
+    <profile>https://www.themoviedb.org/person/129960</profile>
+  </actor>
+  <actor>
+    <name>Yuka Terasaki</name>
+    <role>Rika Teramoto (voice)</role>
+    <thumb>http://image.tmdb.org/t/p/h632/6UMP4F0FsbfN60dU8NwmFGSbfvH.jpg</thumb>
+    <profile>https://www.themoviedb.org/person/1247771</profile>
+  </actor>
+  <actor>
+    <name>Megumi Han</name>
+    <role>Satou (voice)</role>
+    <thumb>http://image.tmdb.org/t/p/h632/52XQZeQRl8GkNZtqUHl17zWuZpD.jpg</thumb>
+    <profile>https://www.themoviedb.org/person/1164931</profile>
+  </actor>
+  <actor>
+    <name>Mikako Komatsu</name>
+    <role>Aizawa (voice)</role>
+    <thumb>http://image.tmdb.org/t/p/h632/wIeXgd7euDZbF6wdo7FTXPrAwyB.jpg</thumb>
+    <profile>https://www.themoviedb.org/person/1281498</profile>
+  </actor>
+  <actor>
+    <name>Takanori Hoshino</name>
+    <role>Mr. Itou (voice)</role>
+    <thumb>http://image.tmdb.org/t/p/h632/mwwtT5eDaxU50cYsXjoT80veLTc.jpg</thumb>
+    <profile>https://www.themoviedb.org/person/1247770</profile>
+  </actor>
+  <actor>
+    <name>Suguru Inoue</name>
+    <role>Matsumoto (voice)</role>
+    <thumb>http://image.tmdb.org/t/p/h632/d8HENDLJr7lI1PvvcWCPpng9BYh.jpg</thumb>
+    <profile>https://www.themoviedb.org/person/1256918</profile>
+  </actor>
+  <actor>
+    <name>Takeshi Maeda</name>
+    <role>Shouta Akizuki (voice)</role>
+    <thumb>http://image.tmdb.org/t/p/h632/k6tJ7W8jGCTNuD2NACzDO1VEZ44.jpg</thumb>
+    <profile>https://www.themoviedb.org/person/1124542</profile>
+  </actor>
+  <producer>
+    <name>Noritaka Kawaguchi</name>
+    <role>Producer</role>
+    <thumb>http://image.tmdb.org/t/p/h632/c05kckuUvGjv6xx6pI7bPpjydvk.jpg</thumb>
+  </producer>
+  <producer>
+    <name>Ai Niinuma</name>
+    <role>Casting</role>
+    <thumb/>
+  </producer>
+  <producer>
+    <name>Sawako Todoroki</name>
+    <role>Casting</role>
+    <thumb/>
+  </producer>
+  <trailer>plugin://plugin.video.youtube/?action=play_video&amp;videoid=FMabhvDoolc&amp;hd=1</trailer>
+  <languages>日文</languages>
+  <dateadded>2020-05-03 21:12:27</dateadded>
+  <fileinfo>
+    <streamdetails>
+      <video>
+        <codec>h264</codec>
+        <aspect>1.78</aspect>
+        <width>1280</width>
+        <height>720</height>
+        <durationinseconds>2751</durationinseconds>
+        <stereomode/>
+      </video>
+      <audio>
+        <codec>AAC</codec>
+        <language/>
+        <channels>2</channels>
+      </audio>
+      <subtitle>
+        <language/>
+      </subtitle>
+    </streamdetails>
+  </fileinfo>
+  <!--tinyMediaManager meta data-->
+  <source>UNKNOWN</source>
+  <edition>NONE</edition>
+  <original_filename>言の葉の庭 - The Garden Of Words.mp4</original_filename>
+  <user_note/>
+</movie>
