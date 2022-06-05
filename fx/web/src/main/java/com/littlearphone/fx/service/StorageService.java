@@ -5,6 +5,8 @@ import com.littlearphone.fx.dto.StorageDto;
 import com.littlearphone.fx.entity.BaseStorage;
 import com.littlearphone.fx.entity.FSStorage;
 import com.littlearphone.fx.repository.StorageRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,6 +47,7 @@ public class StorageService {
     }
     
     @Transactional
+    @CacheEvict("cache-storage-by-id")
     public BaseStorage delete(Long storageId) {
         if (isNull(storageId)) {
             return new FSStorage();
@@ -56,6 +59,7 @@ public class StorageService {
         }
     }
     
+    @Cacheable("cache-storage-by-id")
     public Path resolveFile(Long id, final String relativePath) {
         return storageRepository.findById(id).map(storage -> storage.resolve(relativePath)).orElseThrow();
     }

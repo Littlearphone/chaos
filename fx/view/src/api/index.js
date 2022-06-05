@@ -26,6 +26,10 @@ export const textContent = function(storageId, path) {
     }
   })
 }
+export const detectVideo = function(storageId, path) {
+  const location = btoa(encodeURIComponent(path))
+  return axios.get(`/api/viewer/${storageId}/detect`, { params: { location } })
+}
 export const saveStorage = function(storage) {
   return axios.post('/api/storage', storage)
 }

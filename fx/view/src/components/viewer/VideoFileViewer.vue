@@ -5,7 +5,7 @@
         v-if="dialogVisible"
         :style="contentStyle"
         class="viewer-container"
-        v-loading="loadingVideo"
+        v-loading="loadingVideo || convertVideo"
         element-loading-text="玩命加载中"
     >
       <video ref="player" :src="videoFilePath" autoplay="autoplay" loop="loop" controls></video>
@@ -13,6 +13,8 @@
   </el-dialog>
 </template>
 <script>
+import { detectVideo } from '../../api'
+
 export default {
   components: {},
   props: {
@@ -31,21 +33,28 @@ export default {
       })
       vm.dialogVisible = true
       if (value && value.path) {
+        vm.detectVideo(value.path)
         vm.loadVideo(value.path)
       }
     }
   },
   computed: {
     videoFilePath() {
+      if (this.convertVideo) {
+        return ''
+      }
       return `/api/viewer/stream?storageId=${this.property.storageId}&location=${btoa(encodeURIComponent(this.property.path))}`
     }
   },
   data() {
+    this.detectVideo(this.property.path)
     this.loadVideo(this.property.path)
     return {
+      timer: null,
       options: {},
       contentStyle: {},
       loadingVideo: true,
+      convertVideo: true,
       dialogVisible: true
     }
   },
@@ -55,6 +64,9 @@ export default {
       vm.computeDialogSize()
     }, false)
     requestAnimationFrame(vm.computeDialogSize.bind(vm))
+  },
+  destroyed() {
+    this.timer && clearTimeout(this.timer)
   },
   methods: {
     computeDialogSize() {
@@ -73,6 +85,18 @@ export default {
       }
       this.contentStyle = { height: contentHeight + 'px' }
     },
+    detectVideo(path) {
+      const vm = this
+      if (!path) {
+        return
+      }
+      detectVideo(vm.property.storageId, path).then(response => {
+        vm.convertVideo = response.data !== 'CONVERTED'
+        if (vm.convertVideo) {
+          vm.timer = setTimeout(() => vm.detectVideo(path), 5000)
+        }
+      }).catch(console.error)
+    },
     loadVideo(path) {
       const vm = this
       if (!path) {
@@ -80,7 +104,7 @@ export default {
         return
       }
       const video = vm.$refs.player
-      if (!video) {
+      if (!video || vm.convertVideo) {
         setTimeout(() => vm.loadVideo(path), 100)
         return
       }

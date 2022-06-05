@@ -10,9 +10,10 @@ import static java.util.stream.Collectors.toSet;
 @Getter
 public enum VideoType {
     REBUILD("/mp4"),
-    CONVERT("/x-msvideo", "/quicktime"),
-    OTHERS("/octet-stream"),
-    NO_ACTION(); // "/x-matroska"
+    CONVERT("/vnd.rn-realmedia"),
+    COPY("/x-msvideo", "/quicktime"),
+    OTHERS("/octet-stream") // "/x-matroska"
+    ;
     private final Set<String> types;
     
     VideoType(String... types) {

@@ -25,6 +25,7 @@
     "less-loader": "^10.0.1",
     "progress": "^2.0.3",
     "svg-sprite-loader": "^6.0.9",
-    "vite": "^2.6.13"
+    "vite": "^2.6.13",
+    "vite-plugin-rewrite-all": "^0.1.2"
   }
 }

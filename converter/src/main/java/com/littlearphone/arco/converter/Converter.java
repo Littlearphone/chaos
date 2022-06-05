@@ -3,11 +3,10 @@ package com.littlearphone.arco.converter;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
 import org.apache.tika.Tika;
-import org.apache.tika.io.IOUtils;
 
-import java.io.FileOutputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -16,62 +15,45 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.littlearphone.arco.converter.constant.VideoType.CONVERT;
-import static com.littlearphone.arco.converter.constant.VideoType.NO_ACTION;
+import static com.littlearphone.arco.converter.constant.VideoType.COPY;
 import static com.littlearphone.arco.converter.constant.VideoType.OTHERS;
 import static com.littlearphone.arco.converter.constant.VideoType.REBUILD;
-import static com.littlearphone.arco.converter.utility.CollectionExtend.asStream;
-import static com.littlearphone.arco.converter.utility.PathExtend.FFMPEG;
 import static com.littlearphone.arco.converter.utility.PathExtend.JAR_FOLDER;
 import static com.littlearphone.arco.converter.utility.PathExtend.LINE_SEPARATOR;
-import static com.littlearphone.arco.converter.utility.PathExtend.OS_NAME;
-import static com.littlearphone.arco.converter.utility.PathExtend.TEMP_DIR;
+import static com.littlearphone.arco.converter.utility.StreamExtend.asStream;
 import static com.littlearphone.arco.converter.utility.UUIDExtend.uuid;
 import static java.lang.Runtime.getRuntime;
 import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.Files.createFile;
 import static java.nio.file.Files.deleteIfExists;
+import static java.nio.file.Files.exists;
 import static java.nio.file.Files.move;
 import static java.nio.file.Files.notExists;
 import static java.nio.file.Files.writeString;
-import static java.nio.file.Paths.get;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static java.nio.file.StandardOpenOption.APPEND;
 import static java.time.Duration.ofMillis;
-import static java.util.Objects.requireNonNull;
+import static java.util.Collections.emptyList;
+import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.ArrayUtils.add;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.endsWithIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.lowerCase;
-import static org.apache.tika.io.IOUtils.copy;
 
 public class Converter {
     private static final Tika TIKA = new Tika();
     private static final byte[] _4BIT = new byte[4];
     private static final AtomicInteger COUNT = new AtomicInteger();
-    private static final Path OUTPUT = get(TEMP_DIR).resolve(uuid()).toAbsolutePath();
-
-    static {
-        getRuntime().addShutdownHook(new Thread(Converter::cleanFiles));
-        try (
-            final InputStream inputStream = Main.class.getResourceAsStream(FFMPEG);
-            final FileOutputStream output = new FileOutputStream(OUTPUT.toFile())
-        ) {
-            copy(requireNonNull(inputStream), output);
-            if (OS_NAME.equalsIgnoreCase("linux")) {
-                getRuntime().exec("chmod 777 -R " + OUTPUT);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @SneakyThrows
-    private static void cleanFiles() {
-        deleteIfExists(OUTPUT);
-    }
-
+    
     @SneakyThrows
     public static List<Object> convertVideo(Path path) {
+        if (notExists(path)) {
+            System.out.printf("Missing video: %s%n", path.getFileName());
+            return emptyList();
+        }
+        System.out.printf("Current video: %s%n", path.getFileName());
         final String type = detect(path);
         String fileName = path.getFileName().toString();
         List<Object> data = new ArrayList<>();
@@ -82,32 +64,42 @@ public class Converter {
         data.add(fileName);
         if (asStream(REBUILD.getTypes()).anyMatch(type::endsWith)) {
             if (needRestructure(path)) {
-                data.set(3, directStreamCopy(path));
+                data.set(3, directStreamCopy(path, true));
                 return data;
             }
             data.set(2, "NO");
             return data;
         }
         if (asStream(CONVERT.getTypes()).anyMatch(type::endsWith)) {
-            data.set(3, directStreamCopy(path));
+            data.set(3, realStreamConvert(path, true));
+            if (exists(path)) {
+                move(path, path.resolveSibling(path.getFileName().toString() + ".bak"));
+            }
+            return data;
+        }
+        if (asStream(COPY.getTypes()).anyMatch(type::endsWith)) {
+            data.set(3, directStreamCopy(path, false));
+            if (exists(path)) {
+                move(path, path.resolveSibling(path.getFileName().toString() + ".bak"));
+            }
             return data;
         }
         if (asStream(OTHERS.getTypes()).anyMatch(type::endsWith) && endsWithIgnoreCase(fileName, ".ts")) {
-            data.set(3, directStreamCopy(path));
+            data.set(3, directStreamCopy(path, false));
+            if (exists(path)) {
+                move(path, path.resolveSibling(path.getFileName().toString() + ".bak"));
+            }
             return data;
         }
         data.set(2, "NO");
-        if (NO_ACTION.getTypes().contains(type)) {
-            // realStreamConvert(path);
-        }
         return data;
     }
-
+    
     @SneakyThrows
     public static String detect(Path path) {
         return lowerCase(TIKA.detect(path));
     }
-
+    
     @SneakyThrows
     public static boolean needRestructure(Path path) {
         @Cleanup RandomAccessFile file = new RandomAccessFile(path.toString(), "r");
@@ -125,7 +117,7 @@ public class Converter {
         }
         return !Objects.equals(readString(file), "moov");
     }
-
+    
     // private static void checkSuffix(Path path, String suffix) {
     //     String source = path.toString();
     //     if (endsWithIgnoreCase(source, suffix)) {
@@ -138,11 +130,11 @@ public class Converter {
     //
     private static String readString(RandomAccessFile file) throws IOException {
         if (file.read(_4BIT) < 4) {
-            return "";
+            return EMPTY;
         }
         return new String(_4BIT);
     }
-
+    
     private static int readInt(RandomAccessFile stream) throws IOException {
         if (stream.read(_4BIT) < 4) {
             return 0;
@@ -153,56 +145,88 @@ public class Converter {
         }
         return result;
     }
-
-    // private static void realStreamConvert(Path video) {
-    //     ffmpegExecute(video, OUTPUT.toString(),
-    //         "-i", video.toString(),
-    //         "-movflags", "faststart",
-    //         "-qscale", "0",
-    //         "-vcodec", "libx264");
-    // }
-    //
-    private static String directStreamCopy(Path video) {
-        double cost = ffmpegExecute(video, OUTPUT.toString(),
-                                    "-i", format("\"%s\"", video),
-                                    "-movflags", "faststart",
-                                    "-vcodec", "copy",
-                                    "-acodec", "copy");
+    
+    private static String realStreamConvert(Path video, boolean delete) {
+        double cost = ffmpegExecute(video, delete, "ffmpeg",
+            // "-hwaccel", "cuvid",
+            // "-hwaccel", "qsv",
+            "-i", format("\"%s\"", video),
+            "-threads", "20",
+            "-preset", "ultrafast",
+            "-movflags", "faststart",
+            "-vcodec", "h264",
+            // "-vcodec", "h264_nvenc",
+            // "-vcodec", "h264_qsv",
+            "-acodec", "aac");
         return cost >= 0 ? String.valueOf(cost) : "--";
     }
-
-    private static double ffmpegExecute(final Path video, final String... commands) {
+    
+    private static String directStreamCopy(Path video, boolean delete) {
+        double cost = ffmpegExecute(video, delete, "ffmpeg",
+            "-i", format("\"%s\"", video),
+            "-threads", "20",
+            "-preset", "ultrafast",
+            "-movflags", "faststart",
+            "-vcodec", "copy",
+            "-acodec", "copy");
+        return cost >= 0 ? String.valueOf(cost) : "--";
+    }
+    
+    private static double ffmpegExecute(final Path video, final boolean delete, final String... commands) {
         final String outputSuffix = ".mp4";
         final Path parent = video.getParent();
         final Path target = parent.resolve(uuid() + outputSuffix);
+        getRuntime().addShutdownHook(new Thread(cleanTempVideo(target)));
         final long start = currentTimeMillis();
         try {
             final Process process = new ProcessBuilder()
                 .redirectErrorStream(true)
                 .command(add(commands, target.toString()))
                 .start();
+            new Thread(() -> outputLogFile(process)).start();
             if (process.waitFor() != 0) {
-                outputLogFile(process);
                 return -1;
             }
             final String fullName = video.getFileName().toString();
             final String name = fullName.substring(0, fullName.lastIndexOf("."));
             move(target, parent.resolve(name + outputSuffix), REPLACE_EXISTING);
-            deleteIfExists(video);
+            if (delete) {
+                deleteIfExists(video);
+            }
             return ofMillis(currentTimeMillis() - start).toSeconds();
         } catch (Exception e) {
             e.printStackTrace();
             return -1;
         }
     }
-
-    private static void outputLogFile(Process process) throws IOException {
-        try (final InputStream stream = process.getInputStream()) {
+    
+    private static Runnable cleanTempVideo(final Path target) {
+        return () -> {
+            try {
+                deleteIfExists(target);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        };
+    }
+    
+    private static final char CARRIAGE_RETURN = '\r';
+    
+    @SneakyThrows
+    private static void outputLogFile(Process process) {
+        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), UTF_8))) {
             Path logFile = JAR_FOLDER.resolve("convert.log");
             if (notExists(logFile)) {
                 createFile(logFile);
             }
-            writeString(logFile, LINE_SEPARATOR + IOUtils.toString(stream) + LINE_SEPARATOR, APPEND);
+            String line = reader.readLine();
+            while (nonNull(line)) {
+                writeString(logFile, line + LINE_SEPARATOR, APPEND);
+                System.out.print(CARRIAGE_RETURN + line);
+                line = reader.readLine();
+            }
+            System.out.print(CARRIAGE_RETURN + EMPTY);
+            System.out.flush();
         }
     }
 }

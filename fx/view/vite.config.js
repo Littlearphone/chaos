@@ -1,13 +1,14 @@
 import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
 import { svgBuilder } from './src/plugins/svg-builder'
+import pluginRewriteAll from 'vite-plugin-rewrite-all'
 
 const prefix = `monaco-editor/esm/vs`
 /**
  * @type {import('vite').UserConfig}
  */
 export default defineConfig({
-  plugins: [vue(), svgBuilder('./src/icons/svg/')],
+  plugins: [vue(), pluginRewriteAll(), svgBuilder('./src/icons/svg/')],
   build: {
     rollupOptions: {
       output: {
